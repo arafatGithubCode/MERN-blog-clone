@@ -1,7 +1,57 @@
-import { Button, Label, TextInput } from "flowbite-react";
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+
+import { Button, Label, Spinner, TextInput } from "flowbite-react";
+import { useFormik } from "formik";
+import { signUpSchema } from "../validator";
+
+import { FaEye } from "react-icons/fa";
+import { BiSolidHide } from "react-icons/bi";
+import { toast } from "react-toastify";
 
 const SignUp = () => {
+  const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null);
+
+  const formik = useFormik({
+    initialValues: {
+      username: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+    },
+    validationSchema: signUpSchema,
+    onSubmit: async (_, actions) => {
+      actions.resetForm();
+      try {
+        setLoading(true);
+        setErrorMessage(null);
+        const res = await fetch("/api/auth/signup", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formik.values),
+        });
+        const data = await res.json();
+        if (data.success === false) {
+          setErrorMessage(data.message);
+          setLoading(false);
+          toast.error(data.message);
+          return;
+        }
+        setLoading(false);
+        navigate("/signin");
+      } catch (error) {
+        setLoading(false);
+        toast.error("something went wrong!");
+        console.log(error.message);
+      }
+    },
+  });
+
   return (
     <div className="min-h-screen mt-20">
       <div className="flex flex-col md:flex-row max-w-3xl mx-auto p-3 md:items-center gap-5">
@@ -21,24 +71,82 @@ const SignUp = () => {
 
         {/* right */}
         <div className="flex-1">
-          <form className="flex flex-col gap-4">
+          <form onSubmit={formik.handleSubmit} className="flex flex-col gap-3">
             <div>
               <Label value="Your username" />
-              <TextInput type="text" placeholder="Devid" />
+              <TextInput
+                type="text"
+                placeholder="Devid"
+                id="username"
+                {...formik.getFieldProps("username")}
+              />
+              {formik.errors.username && formik.touched.username && (
+                <p className="text-red-600 text-sm">{formik.errors.username}</p>
+              )}
             </div>
             <div>
               <Label value="Email" />
-              <TextInput type="email" placeholder="example@gmail.com" />
+              <TextInput
+                type="email"
+                placeholder="example@gmail.com"
+                id="email"
+                {...formik.getFieldProps("email")}
+              />
+              {formik.errors.email && formik.touched.email && (
+                <p className="text-red-600 text-sm">{formik.errors.email}</p>
+              )}
+            </div>
+            <div className="relative">
+              <Label value="Your password" />
+              <TextInput
+                type={showPassword ? "text" : "password"}
+                placeholder="password"
+                id="password"
+                {...formik.getFieldProps("password")}
+              />
+              {formik.errors.password && formik.touched.password && (
+                <p className="text-red-600 text-sm">{formik.errors.password}</p>
+              )}
+              {showPassword ? (
+                <FaEye
+                  className="absolute top-8 right-3 text-xl"
+                  onClick={() => setShowPassword((prevState) => !prevState)}
+                />
+              ) : (
+                <BiSolidHide
+                  className="absolute top-8 right-3 text-xl"
+                  onClick={() => setShowPassword((prevState) => !prevState)}
+                />
+              )}
             </div>
             <div>
-              <Label value="Your password" />
-              <TextInput type="password" placeholder="password" />
+              <Label value="Confirm password" />
+              <TextInput
+                type="password"
+                placeholder="password"
+                id="confirmPassword"
+                {...formik.getFieldProps("confirmPassword")}
+              />
+              {formik.errors.confirmPassword &&
+                formik.touched.confirmPassword && (
+                  <p className="text-red-600 text-sm">
+                    {formik.errors.confirmPassword}
+                  </p>
+                )}
             </div>
             <Button gradientDuoTone="purpleToPink" type="submit">
-              Sign up
+              {loading ? (
+                <div className="flex items-center gap-1">
+                  <Spinner size="sm" />
+                  <span>Loading...</span>
+                </div>
+              ) : (
+                "Sign up"
+              )}
             </Button>
           </form>
         </div>
+        {errorMessage && <p className="text-red-600">{errorMessage}</p>}
       </div>
     </div>
   );
