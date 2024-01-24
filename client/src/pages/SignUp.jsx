@@ -145,8 +145,17 @@ const SignUp = () => {
               )}
             </Button>
           </form>
+          <div className="mt-5">
+            <span>Have an account?</span>
+            <Link
+              to="/signin"
+              className="text-blue-700 ml-2 hover:font-semibold transition duration-150"
+            >
+              Sign in
+            </Link>
+          </div>
+          {errorMessage && <Alert className="mt-5">{errorMessage}</Alert>}
         </div>
-        {errorMessage && <Alert>{errorMessage}</Alert>}
       </div>
     </div>
   );

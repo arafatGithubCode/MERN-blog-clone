@@ -95,7 +95,7 @@ const SignIn = () => {
               <Label value="Your password" />
               <TextInput
                 type={showPassword ? "text" : "password"}
-                placeholder="password"
+                placeholder="***"
                 id="password"
                 {...formik.getFieldProps("password")}
               />
@@ -125,8 +125,21 @@ const SignIn = () => {
               )}
             </Button>
           </form>
+          <div className="mt-5">
+            <span>Don&apos;t Have an account?</span>
+            <Link
+              to="/signup"
+              className="text-blue-700 ml-2 hover:font-semibold transition duration-150"
+            >
+              Sign up
+            </Link>
+          </div>
+          {errorMessage && (
+            <Alert color="failure" className="mt-5">
+              {errorMessage}
+            </Alert>
+          )}
         </div>
-        {errorMessage && <Alert color="failure">{errorMessage}</Alert>}
       </div>
     </div>
   );
