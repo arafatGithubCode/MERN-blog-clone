@@ -8,6 +8,7 @@ import { signUpSchema } from "../validator";
 import { FaEye } from "react-icons/fa";
 import { BiSolidHide } from "react-icons/bi";
 import { toast } from "react-toastify";
+import OAuth from "../components/OAuth";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -144,6 +145,7 @@ const SignUp = () => {
                 "Sign up"
               )}
             </Button>
+            <OAuth />
           </form>
           <div className="mt-5">
             <span>Have an account?</span>

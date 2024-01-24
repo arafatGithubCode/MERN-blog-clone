@@ -15,6 +15,7 @@ import {
   signInStart,
   signInSuccess,
 } from "../redux/user/userSlice";
+import OAuth from "../components/OAuth";
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -124,6 +125,7 @@ const SignIn = () => {
                 "Sign in"
               )}
             </Button>
+            <OAuth />
           </form>
           <div className="mt-5">
             <span>Don&apos;t Have an account?</span>
