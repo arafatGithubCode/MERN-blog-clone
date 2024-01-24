@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-import { Button, Label, Spinner, TextInput } from "flowbite-react";
+import { Alert, Button, Label, Spinner, TextInput } from "flowbite-react";
 import { useFormik } from "formik";
 import { signInSchema } from "../validator";
 
@@ -9,11 +9,18 @@ import { FaEye } from "react-icons/fa";
 import { BiSolidHide } from "react-icons/bi";
 import { toast } from "react-toastify";
 
+import { useSelector, useDispatch } from "react-redux";
+import {
+  signInFailure,
+  signInStart,
+  signInSuccess,
+} from "../redux/user/userSlice";
+
 const SignIn = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { loading, error: errorMessage } = useSelector((state) => state.user);
   const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(null);
 
   const formik = useFormik({
     initialValues: {
@@ -26,8 +33,7 @@ const SignIn = () => {
     onSubmit: async (_, actions) => {
       actions.resetForm();
       try {
-        setLoading(true);
-        setErrorMessage(null);
+        dispatch(signInStart());
         const res = await fetch("/api/auth/signin", {
           method: "POST",
           headers: {
@@ -37,15 +43,16 @@ const SignIn = () => {
         });
         const data = await res.json();
         if (data.success === false) {
-          setErrorMessage(data.message);
-          setLoading(false);
+          dispatch(signInFailure(data.message));
           toast.error(data.message);
           return;
         }
-        setLoading(false);
-        navigate("/");
+        if (res.ok) {
+          dispatch(signInSuccess(data));
+          navigate("/");
+        }
       } catch (error) {
-        setLoading(false);
+        dispatch(signInFailure(error.message));
         toast.error("something went wrong!");
         console.log(error.message);
       }
@@ -119,7 +126,7 @@ const SignIn = () => {
             </Button>
           </form>
         </div>
-        {errorMessage && <p className="text-red-600">{errorMessage}</p>}
+        {errorMessage && <Alert color="failure">{errorMessage}</Alert>}
       </div>
     </div>
   );

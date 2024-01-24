@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-import { Button, Label, Spinner, TextInput } from "flowbite-react";
+import { Alert, Button, Label, Spinner, TextInput } from "flowbite-react";
 import { useFormik } from "formik";
 import { signUpSchema } from "../validator";
 
@@ -146,7 +146,7 @@ const SignUp = () => {
             </Button>
           </form>
         </div>
-        {errorMessage && <p className="text-red-600">{errorMessage}</p>}
+        {errorMessage && <Alert>{errorMessage}</Alert>}
       </div>
     </div>
   );
