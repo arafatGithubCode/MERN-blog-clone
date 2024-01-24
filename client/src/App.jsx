@@ -6,7 +6,10 @@ import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
 import Project from "./pages/Project";
 import Error from "./pages/Error";
-import Header from "./pages/components/Header";
+//layouts
+import Header from "./layouts/Header";
+import FooterComp from "./layouts/Footer";
+
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -23,6 +26,7 @@ const App = () => {
           <Route path="/project" element={<Project />} />
           <Route path="*" element={<Error />} />
         </Routes>
+        <FooterComp />
       </BrowserRouter>
       <ToastContainer
         position="bottom-right"
