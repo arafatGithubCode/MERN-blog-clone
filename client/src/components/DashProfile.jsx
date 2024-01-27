@@ -21,6 +21,7 @@ import {
   deleteUserFailure,
   deleteUserStart,
   deleteUserSuccess,
+  signOutSuccess,
 } from "../redux/user/userSlice";
 import { useDispatch } from "react-redux";
 
@@ -154,6 +155,22 @@ const DashProfile = () => {
     }
   };
 
+  const handleSignout = async () => {
+    try {
+      const res = await fetch("/api/auth/signout", {
+        method: "POST",
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        toast.error(data.message);
+      } else {
+        dispatch(signOutSuccess());
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   return (
     <div className="max-w-lg mx-auto w-full p-3">
       <h1 className="text-center my-7 text-3xl font-semibold">Profile</h1>
@@ -230,7 +247,9 @@ const DashProfile = () => {
         >
           Delete Account
         </button>
-        <button className="hover:font-semibold">Sign out</button>
+        <button onClick={handleSignout} className="hover:font-semibold">
+          Sign out
+        </button>
       </div>
       {updateProfileSuccess && (
         <Alert color="success" className="mt-5">
