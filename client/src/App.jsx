@@ -5,6 +5,7 @@ import About from "./pages/About";
 import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
 import Project from "./pages/Project";
+import CreatePost from "./pages/CreatePost";
 import Error from "./pages/Error";
 //layouts
 import Header from "./layouts/Header";
@@ -14,6 +15,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Dashboard from "./pages/Dashboard";
 import PrivateRoute from "./components/PrivateRoute";
+import OnlyAdminPrivateRoute from "./components/OnlyAdminPrivateRoute";
 
 const App = () => {
   return (
@@ -28,6 +30,9 @@ const App = () => {
           <Route path="/project" element={<Project />} />
           <Route element={<PrivateRoute />}>
             <Route path="/dashboard" element={<Dashboard />} />
+          </Route>
+          <Route element={<OnlyAdminPrivateRoute />}>
+            <Route path="/create-post" element={<CreatePost />} />
           </Route>
           <Route path="*" element={<Error />} />
         </Routes>
