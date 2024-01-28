@@ -1,5 +1,13 @@
-import { Alert, Button, FileInput, Select, TextInput } from "flowbite-react";
 import { useState } from "react";
+import {
+  Alert,
+  Button,
+  FileInput,
+  Select,
+  Spinner,
+  TextInput,
+} from "flowbite-react";
+import { toast } from "react-toastify";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { CircularProgressbar } from "react-circular-progressbar";
@@ -12,12 +20,16 @@ import {
   ref,
   uploadBytesResumable,
 } from "firebase/storage";
+import { useNavigate } from "react-router-dom";
 
 const CreatePost = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({});
   const [file, setFile] = useState(null);
   const [imageUploadErr, setImageUploadErr] = useState(null);
   const [imageUploadingProgress, setImageUploadingProgress] = useState(null);
+  const [publishErr, setPublishErr] = useState(null);
+  const [publishLoading, setPublishLoading] = useState(false);
 
   const handlePostImageUpload = async () => {
     try {
@@ -56,10 +68,41 @@ const CreatePost = () => {
         "Image upload failed(Image length must be less then 2 mb)!"
       );
       setImageUploadingProgress(null);
+      toast.error("something went wrong!");
       console.log(error.message);
     }
   };
-  console.log(imageUploadingProgress);
+
+  const handlePublishPost = async (e) => {
+    e.preventDefault();
+    try {
+      setPublishErr(null);
+      setPublishLoading(true);
+      const res = await fetch("/api/post/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+      const data = await res.json();
+      setPublishLoading(false);
+      if (!res.ok) {
+        setPublishErr(data.message);
+        toast.error("something went wrong!");
+        console.log(data.message);
+      } else {
+        setPublishErr(null);
+        navigate(`/post/${data.slug}`);
+        toast.success("A post is published!");
+      }
+    } catch (error) {
+      toast.error("something went wrong!");
+      console.log(error.message);
+      setPublishErr(error.message);
+    }
+  };
+
   return (
     <div className="p-3 max-w-3xl mx-auto min-h-screen">
       <h1 className="text-center text-3xl my-7 font-semibold">Create a post</h1>
@@ -71,8 +114,15 @@ const CreatePost = () => {
             required
             id="title"
             className="flex-1"
+            onChange={(e) =>
+              setFormData({ ...formData, title: e.target.value })
+            }
           />
-          <Select>
+          <Select
+            onChange={(e) =>
+              setFormData({ ...formData, category: e.target.value })
+            }
+          >
             <option value="uncategorized">Select a category</option>
             <option value="javascript">JavaScript</option>
             <option value="reactjs">React.js</option>
@@ -106,6 +156,7 @@ const CreatePost = () => {
         </div>
         <ReactQuill
           theme="snow"
+          onChange={(value) => setFormData({ ...formData, content: value })}
           placeholder="Write something..."
           className="h-72 mb-12"
           required
@@ -117,10 +168,22 @@ const CreatePost = () => {
             alt="Image"
           />
         )}
-        <Button type="submit" gradientDuoTone="purpleToPink">
-          Publish
+        <Button
+          onClick={handlePublishPost}
+          type="submit"
+          gradientDuoTone="purpleToPink"
+        >
+          {publishLoading ? (
+            <div>
+              <Spinner />
+              <span>Loading...</span>
+            </div>
+          ) : (
+            "Publish"
+          )}
         </Button>
         {imageUploadErr && <Alert color="warning">{imageUploadErr}</Alert>}
+        {publishErr && <Alert color="failure">{publishErr}</Alert>}
       </form>
     </div>
   );
