@@ -70,6 +70,7 @@ const DashPosts = () => {
         setUserPosts((prev) =>
           prev.filter((post) => post._id !== postIdToDelete)
         );
+        toast.success("Successfully deleted!");
       }
     } catch (error) {
       console.log(error.message);
