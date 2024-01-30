@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import CallToAction from "../components/CallToAction";
+import CommentSection from "../components/CommentSection";
 
 const PostPage = () => {
   const [loading, setLoading] = useState(true);
@@ -45,7 +46,7 @@ const PostPage = () => {
   if (error) {
     return toast.error("something went wrong!");
   }
-  console.log(post);
+
   return (
     <main className="flex flex-col min-h-screen max-w-6xl mx-auto">
       <h1 className="text-3xl lg:text-4xl text-slate-700 max-w-2xl mx-auto dark:text-slate-300 mt-10 p-3 text-center">
@@ -75,6 +76,7 @@ const PostPage = () => {
       <div className="max-w-4xl mx-auto w-full p-3">
         <CallToAction />
       </div>
+      <CommentSection postId={post && post._id} />
     </main>
   );
 };
