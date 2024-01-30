@@ -10,7 +10,7 @@ const DashUsers = () => {
   const [users, setUsers] = useState([]);
   const [loadingUsers, setLoadingUsers] = useState(false);
   const [showMore, setShowMore] = useState(true);
-  const [postIdToDelete, setPostIdToDelete] = useState("");
+  const [userIdToDelete, setUserIdToDelete] = useState("");
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
@@ -52,7 +52,25 @@ const DashUsers = () => {
     }
   };
 
-  const handleDeleteUser = async () => {};
+  const handleDeleteUser = async () => {
+    try {
+      const res = await fetch(`/api/user/delete/${userIdToDelete}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setUsers((prev) => prev.filter((user) => user._id !== userIdToDelete));
+        toast.success("This user deleted successfully");
+        setShowModal(false);
+      } else {
+        toast.error("something went wrong!");
+        console.log(data.message);
+      }
+    } catch (error) {
+      toast.error("something went wrong!");
+      console.log(error.message);
+    }
+  };
 
   return (
     <div className="table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500">
@@ -101,7 +119,7 @@ const DashUsers = () => {
                     <span
                       onClick={() => {
                         setShowModal(true);
-                        setPostIdToDelete(user._id);
+                        setUserIdToDelete(user._id);
                       }}
                       className="font-semibold text-red-500 hover:underline cursor-pointer"
                     >
