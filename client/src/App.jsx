@@ -6,6 +6,7 @@ import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
 import Project from "./pages/Project";
 import CreatePost from "./pages/CreatePost";
+import PostPage from "./pages/PostPage";
 import Error from "./pages/Error";
 //layouts
 import Header from "./layouts/Header";
@@ -29,6 +30,7 @@ const App = () => {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/project" element={<Project />} />
+          <Route path="/post/:postSlug" element={<PostPage />} />
           <Route element={<PrivateRoute />}>
             <Route path="/dashboard" element={<Dashboard />} />
           </Route>
