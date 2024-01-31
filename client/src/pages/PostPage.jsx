@@ -4,12 +4,14 @@ import { useParams, Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import CallToAction from "../components/CallToAction";
 import CommentSection from "../components/CommentSection";
+import PostCard from "../components/PostCard";
 
 const PostPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [post, setPost] = useState(null);
   const { postSlug } = useParams();
+  const [recentPosts, setRecentPosts] = useState(null);
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -34,6 +36,21 @@ const PostPage = () => {
     };
     fetchPost();
   }, [postSlug]);
+
+  useEffect(() => {
+    const fetchRecentPosts = async () => {
+      try {
+        const res = await fetch("/api/post/getPosts?limit=3");
+        if (res.ok) {
+          const data = await res.json();
+          setRecentPosts(data.posts);
+        }
+      } catch (error) {
+        console.log(error.message);
+      }
+    };
+    fetchRecentPosts();
+  }, []);
 
   if (loading) {
     return (
@@ -77,6 +94,15 @@ const PostPage = () => {
         <CallToAction />
       </div>
       <CommentSection postId={post && post._id} />
+      <div className="">
+        <h1 className="text-slate-800 text-lg text-center my-5 font-medium">
+          Recent articles
+        </h1>
+        <div className="flex flex-wrap gap-5 p-3 justify-center">
+          {recentPosts &&
+            recentPosts.map((post) => <PostCard key={post._id} post={post} />)}
+        </div>
+      </div>
     </main>
   );
 };
