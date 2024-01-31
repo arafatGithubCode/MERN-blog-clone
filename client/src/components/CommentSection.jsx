@@ -93,7 +93,7 @@ const CommentSection = ({ postId }) => {
       )}
       {currentUser && (
         <form
-          onClick={handleSubmit}
+          onSubmit={handleSubmit}
           className="p-3 border border-teal-500 rounded-md"
         >
           <Textarea

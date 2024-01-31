@@ -4,6 +4,9 @@ import { errorHandler } from "../utils/error.js";
 export const createComment = async (req, res, next) => {
   try {
     const { content, postId, userId } = req.body;
+    if (!content || content.trim() === "") {
+      return next(errorHandler(400, "Comment content is required."));
+    }
     if (req.user.id !== userId) {
       return next(
         errorHandler(403, "You are not allowed to create this comment!")

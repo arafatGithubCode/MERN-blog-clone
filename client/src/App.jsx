@@ -18,12 +18,14 @@ import Dashboard from "./pages/Dashboard";
 import PrivateRoute from "./components/PrivateRoute";
 import OnlyAdminPrivateRoute from "./components/OnlyAdminPrivateRoute";
 import UpdatePost from "./pages/UpdatePost";
+import ScrollTop from "./components/ScrollTop";
 
 const App = () => {
   return (
     <>
       <BrowserRouter>
         <Header />
+        <ScrollTop />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
