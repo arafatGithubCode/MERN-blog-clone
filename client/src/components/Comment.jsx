@@ -5,7 +5,7 @@ import moment from "moment";
 
 const Comment = ({ comment }) => {
   const [user, setUser] = useState({});
-  console.log(user);
+
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -33,7 +33,7 @@ const Comment = ({ comment }) => {
             @{user && user.email}
           </span>
           <span className="text-sm text-gray-400">
-            {user && moment(user.updatedAt).fromNow()}
+            {user && moment(comment.updatedAt).fromNow()}
           </span>
         </div>
         <p className="text-md p-1 text-gray-400">

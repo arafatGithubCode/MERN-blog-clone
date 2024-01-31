@@ -11,7 +11,6 @@ const CommentSection = ({ postId }) => {
   const [commentErr, setCommentErr] = useState(null);
   const [loading, setLoading] = useState(false);
   const [comments, setComments] = useState([]);
-  console.log(comments);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
