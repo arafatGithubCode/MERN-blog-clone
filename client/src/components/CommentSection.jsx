@@ -2,11 +2,12 @@ import { Alert, Button, Textarea } from "flowbite-react";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Comment from "./Comment";
 
 const CommentSection = ({ postId }) => {
   const { currentUser } = useSelector((state) => state.user);
+  const navigate = useNavigate();
   const [comment, setComment] = useState("");
   const [commentErr, setCommentErr] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -62,8 +63,37 @@ const CommentSection = ({ postId }) => {
     getComments();
   }, [postId]);
 
+  const onLike = async (commentId) => {
+    try {
+      if (!currentUser) {
+        return navigate("/signin");
+      }
+      const res = await fetch(`/api/comment/likeComment/${commentId}`, {
+        method: "PUT",
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setComments(
+          comments.map((comment) =>
+            comment._id === commentId
+              ? {
+                  ...comment,
+                  likes: data.likes,
+                  numberOnLikes: data.likes.length,
+                }
+              : comment
+          )
+        );
+      } else {
+        console.log(data.message);
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   return (
-    <div className="max-w-3xl mx-auto p-3 w-full">
+    <div className="max-w-2xl mx-auto p-3 w-full">
       {currentUser ? (
         <div className="flex items-center gap-1 text-sm text-gray-500 my-5">
           <p>Signed in as:</p>
@@ -135,7 +165,7 @@ const CommentSection = ({ postId }) => {
           </div>
           {comments &&
             comments.map((comment) => (
-              <Comment key={comment._id} comment={comment} />
+              <Comment key={comment._id} comment={comment} onLike={onLike} />
             ))}
         </>
       )}

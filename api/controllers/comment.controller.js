@@ -41,7 +41,7 @@ export const likeComment = async (req, res, next) => {
     if (!comment) {
       return next(errorHandler(403, "No comments found!"));
     }
-    const userIndex = comment.likes(indexOf(req.user.id));
+    const userIndex = comment.likes.indexOf(req.user.id);
     if (userIndex === -1) {
       comment.numberOfLike += 1;
       comment.likes.push(req.user.id);
