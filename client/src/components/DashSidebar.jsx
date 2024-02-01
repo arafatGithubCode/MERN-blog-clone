@@ -7,6 +7,7 @@ import {
   HiArrowSmRight,
   HiDocumentText,
   HiOutlineUserGroup,
+  HiAnnotation,
 } from "react-icons/hi";
 import { toast } from "react-toastify";
 
@@ -81,6 +82,18 @@ const DashSidebar = () => {
                 labelColor="dark"
               >
                 Users
+              </Sidebar.Item>
+            </Link>
+          )}
+          {currentUser.isAdmin && (
+            <Link to="/dashboard?tab=comments">
+              <Sidebar.Item
+                active={tab === "comments"}
+                as="div"
+                icon={HiAnnotation}
+                labelColor="dark"
+              >
+                Comments
               </Sidebar.Item>
             </Link>
           )}
