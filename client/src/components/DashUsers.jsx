@@ -75,7 +75,7 @@ const DashUsers = () => {
   return (
     <div className="table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500">
       {loadingUsers && (
-        <div className="my-9 flex items-center gap-2">
+        <div className="my-9 flex items-center gap-2 justify-center">
           <Spinner />
           <span className="text-2xl font-semibold text-gray-700 dark:text-gray-300">
             Loading...
