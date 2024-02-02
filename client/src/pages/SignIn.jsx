@@ -61,7 +61,16 @@ const SignIn = () => {
   });
 
   return (
-    <div className="min-h-screen mt-20">
+    <div className="min-h-screen mt-20 relative">
+      <div className="absolute top-[-75px] right-10">
+        <p className="text-yellow-500 font-semibold">
+          Sign in with admin account to see admin functionality
+        </p>
+        <p className="text-sm">Email: admin01@gmail.com</p>
+
+        <p className="text-sm">Admin Password: Admin01</p>
+      </div>
+
       <div className="flex flex-col md:flex-row max-w-3xl mx-auto p-3 md:items-center gap-5">
         {/* left */}
         <div className="flex-1">
